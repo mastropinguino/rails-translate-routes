@@ -139,7 +139,7 @@ class RailsTranslateRoutes
       reset_dictionary
       wanted_locales.each do |locale|
         @dictionary[locale] = Hash.new do |hsh, key|
-          hsh[key] = I18n.translate key, :locale => locale #DISCUSS: caching or no caching (store key and translation in dictionary?)
+          hsh[key] = I18n.translate key, :locale => locale, :scope => :routes #DISCUSS: caching or no caching (store key and translation in dictionary?)
         end
       end
       @available_locales = @dictionary.keys.map &:to_s
@@ -296,7 +296,7 @@ class RailsTranslateRoutes
     # segment is blank or begins with a ":" (param key), the segment
     # is returned untouched
     def translate_path_segment segment, locale
-      return segment if segment.blank? or segment.starts_with?(":")
+      return segment if segment.blank? or segment.starts_with?(":") or segment.starts_with?('*')
 
       match = TRANSLATABLE_SEGMENT.match(segment)[1] rescue nil
 
